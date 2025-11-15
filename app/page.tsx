@@ -4,10 +4,33 @@ import LeftPanel from "@/components/left-panel"
 import dynamic from "next/dynamic"
 const MapView = dynamic(() => import("@/components/map-view"), { ssr: false })
 import RightPanel from "@/components/right-panel"
+import LandingPage from "@/components/landing-page"
+import LoadingScreen from "@/components/loading-screen"
 import { MapLayersProvider } from "@/components/map-layers-context"
 import { TimelineProvider } from "@/components/timeline-context"
+import { useState, useEffect } from "react"
 
 export default function Home() {
+  const [showDashboard, setShowDashboard] = useState(false)
+  const [showLoading, setShowLoading] = useState(false)
+
+  const handleEnterDashboard = () => {
+    setShowLoading(true)
+    // Simulate loading time
+    setTimeout(() => {
+      setShowLoading(false)
+      setShowDashboard(true)
+    }, 3000) // 3 second loading animation
+  }
+
+  if (showLoading) {
+    return <LoadingScreen />
+  }
+
+  if (!showDashboard) {
+    return <LandingPage onEnterDashboard={handleEnterDashboard} />
+  }
+
   return (
     <main className="min-h-screen">
       {/* Mobile guard */}
